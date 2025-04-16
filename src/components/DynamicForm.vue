@@ -22,14 +22,18 @@ import selectRenderer from './SelectRenderer.vue'
 import dateRenderer from './DateRenderer.vue'
 const formData=reactive({})
 const props = defineProps({
-  formConfig:{
-    type:Array,
+  formConfigJSON:{
+    type:String,
     required:true,
-    validator:config=>config.every(i=>'name' in i&&'type' in i),
-    
+    validator: (configJSON) =>{
+      const config=JSON.parse(configJSON)
+      return config.every((i)=>'name' in i && 'type' in i)
+    }, 
   }
 })
-console.log(props.formConfig)
+
+const formConfig=ref(JSON.parse(props.formConfigJSON))
+
 const componentTypeMap={
   'text':textRenderer,
   'select':selectRenderer,
