@@ -4,15 +4,21 @@ import dynamicForm from './components/DynamicForm.vue'
 const config= [
   {
     "name": "username",
-    "type": "text"
+    "type": "text",
+    "rule": {"required": "required"},
   },
   {
     "name": "userid",
-    "type": "text"
+    "type": "text",
+    "rule": {"required":"required","maxLength":"6"},
+
   },
   {
     "name": "date",
-    "type": "date-range"
+    "type": "date-range",
+    "rule": { "required": "required" },
+
+
   },
   {
     "name": "gender",
@@ -22,7 +28,10 @@ const config= [
         { "value": "male", "selection": "male" },
         { "value": "female", "selection": "female" }
       ]
-    }
+    },
+    "rule": { "required": "required" },
+
+
   }
 ];
 //JSON.stringify(config) 会把 config 对象转换为符合 JSON 格式的字符串

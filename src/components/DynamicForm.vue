@@ -17,6 +17,8 @@
 
 <script setup>
 import {reactive, ref}  from 'vue'
+import { useVuelidate } from '@vuelidate/core'
+import { required,maxLength } from '@vuelidate/validators'
 import textRenderer from './TextRenderer.vue'
 import selectRenderer from './SelectRenderer.vue'
 import dateRenderer from './DateRenderer.vue'
@@ -34,6 +36,8 @@ const props = defineProps({
 
 const formConfig=ref(JSON.parse(props.formConfigJSON))
 
+
+
 const componentTypeMap={
   'text':textRenderer,
   'select':selectRenderer,
@@ -44,8 +48,36 @@ const getComponent=(type)=>{
 }
 
 const handleSubmit = () => {
+  v$.value.$validate();
+  if (v$.value.$invalid) {
+    console.log('表单验证不通过', v$.value.$errors);
+    return;
+  }
   console.log('Form submitted:', formData)
+
 }
+
+const getRules=()=>{
+ const rules={}
+ formConfig.value.forEach(i=>{
+  if(i.rule){
+    rules[i.name]={}
+    if(i.rule.required==='required'){
+      rules[i.name].required=required
+    }
+    if (i.rule.maxLength) {
+      rules[i.name].maxLength = maxLength(i.rule.maxLength)
+    } 
+    if (i.rule.minLength) {
+      rules[i.name].minLength = minLength(i.rule.minLength)
+    } 
+  }
+  })
+  console.log('Rules:', rules)
+ return rules
+}
+const rules=getRules()
+const v$ = useVuelidate(rules, formData);
 
 </script>
 
